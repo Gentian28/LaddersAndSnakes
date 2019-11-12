@@ -1,7 +1,8 @@
 import { getRandomInt } from './utility/utility.js';
 
 let col = document.getElementsByTagName('td');
-console.log(col);
+const players = document.getElementsByClassName('player');
+console.log(players)
 
 function generateGame(height, length) {
     const tbody = document.createElement('tbody');
@@ -26,18 +27,26 @@ function generateGame(height, length) {
 }
 main.appendChild(generateGame(0, 0));
 gameMatrix.style.height = gameBoard.clientHeight + 'px';
+players[0].style.height = col1.clientHeight + 'px';
+players[1].style.height = col1.clientHeight + 'px';
+players[0].style.width = col1.clientWidth + 'px';
+players[1].style.width = col1.clientWidth + 'px';
+
 
 window.onresize = function () {
     gameMatrix.style.height = gameBoard.clientHeight + 'px';
+    players[0].style.height = col1.clientHeight + 'px';
+    players[1].style.height = col1.clientHeight + 'px';
+    players[0].style.width = col1.clientWidth + 'px';
+    players[1].style.width = col1.clientWidth + 'px';
 }
 
 class SnakesLadders {
-    constructor() {
-        this.ladders = [[2, 38], [7, 14], [8, 31], [15, 26], [21, 41], [28, 84], [36, 44], [51, 67], [71, 91], [78, 98], [87, 94]];
-        this.snakes = [[16, 6], [46, 25], [49, 11], [62, 19], [64, 60], [74, 53], [89, 68], [92, 88], [95, 75], [99, 80]];
-        this.playersPos = [0, 0];
-        this.turn = 'p1' || 'p2';
-    }
+    ladders = [[2, 38], [7, 14], [8, 31], [15, 26], [21, 41], [28, 84], [36, 44], [51, 67], [71, 91], [78, 98], [87, 94]];
+    snakes = [[16, 6], [46, 25], [49, 11], [62, 19], [64, 60], [74, 53], [89, 68], [92, 88], [95, 75], [99, 80]];
+    playersPos = [0, 0];
+    turn = 'p1' || 'p2';
+
     play(dice1, dice2) {
         let currentPlayer = this.turn;
         if (currentPlayer == 'p1') {
@@ -48,16 +57,7 @@ class SnakesLadders {
         }
         let result = dice1 + dice2;
         this.playersPos[this.currentTurn] = this.playersPos[this.currentTurn] + result;
-        this.ladders.forEach(item => {
-            if (item[0] == this.playersPos[this.currentTurn]) {
-                this.playersPos[this.currentTurn] = item[1];
-            }
-        })
-        this.snakes.forEach(item => {
-            if (item[0] == this.playersPos[this.currentTurn]) {
-                this.playersPos[this.currentTurn] = item[1];
-            }
-        })
+
         if (this.playersPos[this.currentTurn] > 100) {
             this.playersPos[this.currentTurn] = 100 - (this.playersPos[this.currentTurn] - 100)
         }
@@ -80,15 +80,46 @@ class SnakesLadders {
             }
         }
 
+        this.ladders.forEach(item => {
+            if (item[0] == this.playersPos[this.currentTurn]) {
+                this.playersPos[this.currentTurn] = item[1];
+            }
+        })
+        this.snakes.forEach(item => {
+            if (item[0] == this.playersPos[this.currentTurn]) {
+                this.playersPos[this.currentTurn] = item[1];
+            }
+        })
         console.log(this.playersPos)
         return this.playersPos[this.currentTurn];
     }
+    goToNextCell() {
+
+    }
 }
-const setPlayerPosition = function (player, pos) {
-    player.style.bottom = pos.getBoundingClientRect().bottom + 'px';
-    player.style.top = pos.getBoundingClientRect().top + 'px';
-    player.style.left = pos.getBoundingClientRect().left + 'px';
-    player.style.right = pos.getBoundingClientRect().right + 'px';
+
+const goToNextCell = function (currentPosition, finalPosition, player) {
+    console.log(currentPosition, finalPosition)
+    if (currentPosition == finalPosition) {
+        return 1;
+    }
+    let nextCell = 0;
+    let nextCellHTML = 0;
+    if (finalPosition < currentPosition) {
+        nextCell = currentPosition - 1;
+        nextCellHTML = document.getElementById(`col${nextCell}`);
+    } else {
+        nextCell = currentPosition + 1;
+        nextCellHTML = document.getElementById(`col${nextCell}`);
+    }
+    currentPosition = nextCell;
+    player.style.bottom = nextCellHTML.getBoundingClientRect().bottom + 'px';
+    player.style.top = nextCellHTML.getBoundingClientRect().top + 'px';
+    player.style.left = nextCellHTML.getBoundingClientRect().left + 'px';
+    player.style.right = nextCellHTML.getBoundingClientRect().right + 'px';
+    setTimeout(() => {
+        goToNextCell(currentPosition, finalPosition, player);
+    }, 100);
 }
 
 console.log(col1.getBoundingClientRect())
@@ -98,14 +129,12 @@ p2.style.bottom = col1.getBoundingClientRect().bottom + 'px';
 p2.style.top = col1.getBoundingClientRect().top + 'px';
 const game = new SnakesLadders();
 dice.addEventListener('click', function () {
-    console.log(game)
+    const currentPos = [...game.playersPos]; // get current players position ex: [16, 7]
     game.play(getRandomInt(1, 6), getRandomInt(1, 6));
-    const p1Pos = document.getElementById(`col${game.playersPos[0]}`);
-    const p2Pos = document.getElementById(`col${game.playersPos[1]}`);
     if (game.currentTurn == 0) {
-        setPlayerPosition(p1, p1Pos);
+        goToNextCell(currentPos[0], game.playersPos[0], p1)
     } else {
-        setPlayerPosition(p2, p2Pos);
+        goToNextCell(currentPos[1], game.playersPos[1], p2)
     }
 })
-console.dir(dice)
+console.dir(game)
