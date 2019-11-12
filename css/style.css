@@ -15,4 +15,13 @@ body {
 }
 .player {
     position: absolute;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+}
+#gameMatrix {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 }

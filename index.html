@@ -17,11 +17,13 @@
 
     <!-- main -->
     <main id="main">
-        <p id="p1" class="player">player 1</p>
-        <p id="p2" class="player">player 2</p>
+        <p id="p1" class="player"><img src="images/blue.png" alt=""></p>
+        <p id="p2" class="player"><img src="images/red.png" alt=""></p>
         <div class="image-container">
-            <img src="images/snakesandladdersboard.jpg" alt="Game Image">
+            <img src="images/snakesandladdersboard.jpg" alt="Game Image" id="gameBoard">
         </div>
+        <button type="button" id="dice">Play</button>
+        <table id="gameMatrix"></table>
     </main>
 
     <!-- footer -->
@@ -29,7 +31,7 @@
     </footer>
 
     <!-- Load the script on the page. -->
-    <script src="laddersAndSnakes.js"></script>
+    <script src="js/app.js" type="module"></script>
 
 </body>
 
