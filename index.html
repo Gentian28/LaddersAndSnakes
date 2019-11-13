@@ -2,28 +2,47 @@
 <html>
 
 <head>
-    <title>BFS</title>
+    <title>Ladders and Snakes</title>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
     <!-- header -->
-    <header>
+    <header id="header">
+        Ladders & Snakes
     </header>
 
     <!-- main -->
     <main id="main">
-        <div id="p1" class="player"><img src="images/blue.png" alt=""></div>
-        <div id="p2" class="player"><img src="images/red.png" alt=""></div>
-        <div class="image-container">
-            <img src="images/snakesandladdersboard.jpg" alt="Game Image" id="gameBoard">
+        <div id="game">
+            <div id="p1" class="player"><img src="images/white.png" alt=""></div>
+            <div id="p2" class="player"><img src="images/black.png" alt=""></div>
+
+            <button id="playerHolder">Start</button>
+            <!-- game board -->
+            <section id="board">
+                <div class="image-container">
+                    <img src="images/snakesandladdersboard.jpg" alt="Game Image" id="gameBoard">
+                </div>
+                <table id="gameMatrix"></table>
+            </section>
+
+            <div class="result">
+                <div id="resultContainer">
+                    <div id="firstDiceResult"></div>
+                    <div id="secondDiceResult"></div>
+                </div>
+                <button type="button" id="dice">
+                    <img src="images/big-dice.png" alt="Roll Dice">
+                </button>
+            </div>
+
         </div>
-        <button type="button" id="dice">Play</button>
-        <table id="gameMatrix"></table>
     </main>
 
     <!-- footer -->

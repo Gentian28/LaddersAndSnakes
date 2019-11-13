@@ -3,20 +3,43 @@
     outline: none;
 }
 body {
+	-webkit-font-smoothing: antialiased;
+	margin: 0 auto;
+	padding: 0;
+	font-family: 'Montserrat', sans-serif;
     margin: 0;
-    padding: 0;
-    height: 100%;
+    font-weight: normal;
+    font-size: 16px;
+	width: 100%;
+}
+#header {
+    text-align: center;
+    font-size: 80px;
+    margin: 5px 0 15px 0;
+    font-weight: bold;
 }
 #main {
     position: relative;
     max-width: 1200px;
     margin: 0 auto;
 }
-.image-container img {
+#game {
+    display: flex;
+    align-items: flex-end;
+    max-width: 800px;
+    margin: 0 auto;
+}
+#board {
+    max-width: 700px;
+    margin: 0 auto;
     width: 100%;
 }
+.image-container img {
+    width: 100%;
+    display: block;
+}
 .player {
-    position: absolute;
+    position: fixed;
     color: #ffffff;
     width: 30px;
     height: 30px;
@@ -24,6 +47,13 @@ body {
     align-items: center;
     justify-content: center;
     transition: all .2s;
+    z-index: 10;
+}
+.player img {
+    height: 75%;
+}
+#board {
+    position: relative;
 }
 #gameMatrix {
     width: 100%;
@@ -32,7 +62,77 @@ body {
     left: 0;
     max-width: 1200px;
     margin: 0;
+    max-width: 700px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 td {
     width: 10%;
+}
+#playerHolder {
+    margin-right: 15px;
+}
+.result {
+    margin-left: 15px;
+}
+#dice {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+#dice:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+#dice img {
+    max-width: 64px;
+}
+#resultContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 24px;
+    align-items: flex-end;
+    display: none;
+}
+#resultContainer > * {
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px 2px #cccccc;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#playerHolder {
+    margin-bottom: 22px;
+    border: none;
+    background: none;
+    text-transform: uppercase;
+    color: #e20000;
+    font-weight: bold;
+    font-size: 14px;
+    position: relative;
+    z-index: 20;
+    padding: 7px 5px;
+    background: #ffffff;
+    border-radius: 3px;
+    box-shadow: 0px 0px 10px 1px #cccccc;
+}
+
+@media (max-width: 768px) {
+    #playerHolder {
+        display: none;
+    }
+    #header {
+        font-size: 30px;
+    }
+    #game {
+        flex-flow: column;
+        align-items: center;
+    }
+    .player {
+        left: 0;
+    }
 }
