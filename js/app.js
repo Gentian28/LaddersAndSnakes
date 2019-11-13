@@ -42,25 +42,36 @@ window.onresize = function () {
 }
 
 class SnakesLadders {
-    ladders = [[2, 38], [7, 14], [8, 31], [15, 26], [21, 41], [28, 84], [36, 44], [51, 67], [71, 91], [78, 98], [87, 94]];
+    ladders = [[2, 38], [7, 14], [8, 31], [15, 26], [21, 42], [28, 84], [36, 44], [51, 67], [71, 91], [78, 98], [87, 94]];
     snakes = [[16, 6], [46, 25], [49, 11], [62, 19], [64, 60], [74, 53], [89, 68], [92, 88], [95, 75], [99, 80]];
     playersPos = [0, 0];
+    previowsPlayersPos;
     turn = 'p1' || 'p2';
+    nextCellHTML = 0;
 
     play(dice1, dice2) {
+        console.log(`Dice1: ${dice1}, Dice2: ${dice2}`);
         let currentPlayer = this.turn;
         if (currentPlayer == 'p1') {
+            this.currentPlayerId = document.getElementById('p1');
             this.currentTurn = 0;
         }
         if (currentPlayer == 'p2') {
+            this.currentPlayerId = document.getElementById('p2');
             this.currentTurn = 1;
         }
+        this.previowsPlayersPos = [...this.playersPos];
         let result = dice1 + dice2;
+
+        let finalCell = this.previowsPlayersPos[this.currentTurn] + result;
+
+        this.goToNextCell(this.previowsPlayersPos[this.currentTurn], finalCell, this.currentPlayerId)
+
         this.playersPos[this.currentTurn] = this.playersPos[this.currentTurn] + result;
 
-        if (this.playersPos[this.currentTurn] > 100) {
-            this.playersPos[this.currentTurn] = 100 - (this.playersPos[this.currentTurn] - 100)
-        }
+        // if (this.playersPos[this.currentTurn] > 100) {
+        //     this.playersPos[this.currentTurn] = 100 - (this.playersPos[this.currentTurn] - 100)
+        // }
         if (this.playersPos[this.currentTurn] === 100) {
             alert(`Player ${this.turn} wins`)
         }
@@ -80,61 +91,70 @@ class SnakesLadders {
             }
         }
 
-        this.ladders.forEach(item => {
-            if (item[0] == this.playersPos[this.currentTurn]) {
-                this.playersPos[this.currentTurn] = item[1];
-            }
-        })
-        this.snakes.forEach(item => {
-            if (item[0] == this.playersPos[this.currentTurn]) {
-                this.playersPos[this.currentTurn] = item[1];
-            }
-        })
+        // console.log(finalCell)
         console.log(this.playersPos)
         return this.playersPos[this.currentTurn];
     }
-    goToNextCell() {
+    goToNextCell(currentPosition, finalPosition, player) {
+        if (currentPosition == finalPosition) {
+            return 1;
+        }
+        let nextCell;
+        if (currentPosition > finalPosition) {
+            nextCell = currentPosition - 1;
+        } else {
+            nextCell = currentPosition + 1;
+        }
+        let nextCellHTML = document.getElementById(`col${nextCell}`);
 
+        currentPosition = nextCell;
+
+        player.style.bottom = nextCellHTML.getBoundingClientRect().bottom + 'px';
+        player.style.top = nextCellHTML.getBoundingClientRect().top + 'px';
+        player.style.left = nextCellHTML.getBoundingClientRect().left + 'px';
+        player.style.right = nextCellHTML.getBoundingClientRect().right + 'px';
+        if (currentPosition == finalPosition) {
+            this.ladders.forEach(item => {
+                if (item[0] == finalPosition) {
+                    this.playersPos[this.currentTurn] = item[1];
+                    nextCellHTML = document.getElementById(`col${this.playersPos[this.currentTurn]}`);
+                    player.style.bottom = nextCellHTML.getBoundingClientRect().bottom + 'px';
+                    player.style.top = nextCellHTML.getBoundingClientRect().top + 'px';
+                    player.style.left = nextCellHTML.getBoundingClientRect().left + 'px';
+                    player.style.right = nextCellHTML.getBoundingClientRect().right + 'px';
+                }
+            })
+            this.snakes.forEach(item => {
+                if (item[0] == finalPosition) {
+                    this.playersPos[this.currentTurn] = item[1];
+                    nextCellHTML = document.getElementById(`col${this.playersPos[this.currentTurn]}`);
+                    player.style.bottom = nextCellHTML.getBoundingClientRect().bottom + 'px';
+                    player.style.top = nextCellHTML.getBoundingClientRect().top + 'px';
+                    player.style.left = nextCellHTML.getBoundingClientRect().left + 'px';
+                    player.style.right = nextCellHTML.getBoundingClientRect().right + 'px';
+                }
+            })
+        }
+
+        if (finalPosition > 100) {
+            if (currentPosition == 100) {
+                finalPosition = 100 - (finalPosition - 100)
+                this.playersPos[this.currentTurn] = finalPosition;
+            }
+        }
+
+        setTimeout(() => {
+            this.goToNextCell(currentPosition, finalPosition, player);
+        }, 100);
     }
 }
 
-const goToNextCell = function (currentPosition, finalPosition, player) {
-    console.log(currentPosition, finalPosition)
-    if (currentPosition == finalPosition) {
-        return 1;
-    }
-    let nextCell = 0;
-    let nextCellHTML = 0;
-    if (finalPosition < currentPosition) {
-        nextCell = currentPosition - 1;
-        nextCellHTML = document.getElementById(`col${nextCell}`);
-    } else {
-        nextCell = currentPosition + 1;
-        nextCellHTML = document.getElementById(`col${nextCell}`);
-    }
-    currentPosition = nextCell;
-    player.style.bottom = nextCellHTML.getBoundingClientRect().bottom + 'px';
-    player.style.top = nextCellHTML.getBoundingClientRect().top + 'px';
-    player.style.left = nextCellHTML.getBoundingClientRect().left + 'px';
-    player.style.right = nextCellHTML.getBoundingClientRect().right + 'px';
-    setTimeout(() => {
-        goToNextCell(currentPosition, finalPosition, player);
-    }, 100);
-}
-
-console.log(col1.getBoundingClientRect())
 p1.style.bottom = col1.getBoundingClientRect().bottom + 'px';
 p1.style.top = col1.getBoundingClientRect().top + 'px';
 p2.style.bottom = col1.getBoundingClientRect().bottom + 'px';
 p2.style.top = col1.getBoundingClientRect().top + 'px';
 const game = new SnakesLadders();
 dice.addEventListener('click', function () {
-    const currentPos = [...game.playersPos]; // get current players position ex: [16, 7]
+    // const currentPos = [...game.playersPos]; // get current players position ex: [16, 7]
     game.play(getRandomInt(1, 6), getRandomInt(1, 6));
-    if (game.currentTurn == 0) {
-        goToNextCell(currentPos[0], game.playersPos[0], p1)
-    } else {
-        goToNextCell(currentPos[1], game.playersPos[1], p2)
-    }
 })
-console.dir(game)
